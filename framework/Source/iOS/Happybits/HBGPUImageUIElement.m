@@ -86,7 +86,7 @@
     
     GLubyte *imageData = (GLubyte *) calloc(1, (int)layerPixelSize.width * (int)layerPixelSize.height * 4);
     
-    [HBTask runAsyncOnMain:^{
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         
         CGColorSpaceRef genericRGBColorspace = CGColorSpaceCreateDeviceRGB();
         CGContextRef imageContext = CGBitmapContextCreate(imageData, (int)layerPixelSize.width, (int)layerPixelSize.height, 8, (int)layerPixelSize.width * 4, genericRGBColorspace,  kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
