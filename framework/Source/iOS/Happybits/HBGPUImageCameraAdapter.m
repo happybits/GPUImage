@@ -87,7 +87,6 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 
 @interface HBGPUImageCameraAdapter ()
 
-@property (nonatomic, strong) dispatch_semaphore_t frameRenderingSemaphore;
 @property (nonatomic, strong) GLProgram *yuvConversionProgram;
 @property (nonatomic, assign) GLint yuvConversionPositionAttribute;
 @property (nonatomic, assign) GLint yuvConversionTextureCoordinateAttribute;
@@ -113,8 +112,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 		return nil;
     }
     
-    _frameRenderingSemaphore = dispatch_semaphore_create(1);
-	_outputRotation = kGPUImageNoRotation;
+    _outputRotation = kGPUImageNoRotation;
     _internalRotation = kGPUImageNoRotation;
     _preferredConversion = kColorConversion709;
     
@@ -125,10 +123,16 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     
     if ([GPUImageContext supportsFastTextureUpload]) {
         BOOL supportsFullYUVRange = NO;
+
+        // The first formats listed in the available format array are the most efficient. Use whichever
+        // format appears first.
         NSArray *supportedPixelFormats = videoOutput.availableVideoCVPixelFormatTypes;
         for (NSNumber *currentPixelFormat in supportedPixelFormats) {
-            if ([currentPixelFormat intValue] == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) {
-                supportsFullYUVRange = YES;
+            if (currentPixelFormat.intValue == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange ||
+                currentPixelFormat.intValue == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange) {
+
+                supportsFullYUVRange = currentPixelFormat.intValue == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
+                break;
             }
         }
         
@@ -139,8 +143,6 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         }
         
         _isFullYUVRange = supportsFullYUVRange;
-        // TODO - get this plumbed over to the capture session
-        //[videoOutput setVideoSettings:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange] forKey:(id)kCVPixelBufferPixelFormatTypeKey]];
         
     } else {
         _pixelFormat = kCVPixelFormatType_32BGRA;
@@ -239,34 +241,23 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 - (void)processSampleBuffer:(CMSampleBufferRef)sampleBuffer
     andCaptureFilteredImage:(GPUImageOutput *)filter
                   withBlock:(void (^)(UIImage *))block {
-    
-    // If the caller cares about this frame, wait to be able to process it. Otherwise
-    // drop it if a previous frame is in progress.
-    uint64_t dispatchTime = block ? DISPATCH_TIME_FOREVER : DISPATCH_TIME_NOW;
-    if (dispatch_semaphore_wait(self.frameRenderingSemaphore, dispatchTime) != 0) {
-        return;
-    }
-    
+
+    NSAssert(dispatch_get_specific([GPUImageContext contextKey]), @"Must be called on context queue");
+
     if (self.dropAllFrames) {
-        dispatch_semaphore_signal(self.frameRenderingSemaphore);
         return;
     }
     
-    CFRetain(sampleBuffer);
-    runAsynchronouslyOnVideoProcessingQueue(^{
-        if (filter) {
-            [filter useNextFrameForImageCapture];
-        }
-        
-        [self processVideoSampleBuffer:sampleBuffer];
-        CFRelease(sampleBuffer);
-        
-        if (block) {
-            UIImage *capturedImage = [filter imageFromCurrentFramebuffer];
-            block(capturedImage);
-        }
-        dispatch_semaphore_signal(self.frameRenderingSemaphore);
-    });
+    if (filter) {
+        [filter useNextFrameForImageCapture];
+    }
+    
+    [self processVideoSampleBuffer:sampleBuffer];
+
+    if (block) {
+        UIImage *capturedImage = [filter imageFromCurrentFramebuffer];
+        block(capturedImage);
+    }
 }
 
 - (void)processVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer {
@@ -530,15 +521,15 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
 }
 
 - (void)setDropAllFrames:(BOOL)dropAllFrames {
-    dispatch_semaphore_wait(self.frameRenderingSemaphore, DISPATCH_TIME_FOREVER);
-    _dropAllFrames = dropAllFrames;
-    dispatch_semaphore_signal(self.frameRenderingSemaphore);
+    @synchronized (self) {
+        _dropAllFrames = dropAllFrames;
+    }
 }
 
 - (void)runBlockSynchronously:(void (^)())block {
-    dispatch_semaphore_wait(self.frameRenderingSemaphore, DISPATCH_TIME_FOREVER);
-    block();
-    dispatch_semaphore_signal(self.frameRenderingSemaphore);
+    @synchronized(self) {
+        block();
+    }
 }
 
 @end
