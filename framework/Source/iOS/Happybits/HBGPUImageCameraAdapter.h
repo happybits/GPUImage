@@ -13,6 +13,9 @@
 @property (nonatomic, assign) UIInterfaceOrientation outputImageOrientation;
 
 @property (nonatomic, assign) int pixelFormat;
+@property (nonatomic, assign) BOOL useVbo;
+@property (nonatomic, assign) BOOL textureRenderDisabled;
+@property (nonatomic, assign) BOOL reuseFramebuffer;
 
 @property (nonatomic, assign) BOOL horizontallyMirrorFrontFacingCamera;
 @property (nonatomic, assign) BOOL horizontallyMirrorRearFacingCamera;

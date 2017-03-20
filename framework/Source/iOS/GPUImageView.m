@@ -22,6 +22,9 @@
     GLfloat backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha;
 
     CGSize boundsSizeAtFrameBufferEpoch;
+    GLuint viewVertexBuffer;
+    GLuint viewIndexBuffer;
+    GLuint viewVertexArrayObject;
 }
 
 @property (assign, nonatomic) NSUInteger aspectRatio;
@@ -123,6 +126,8 @@
         [GPUImageContext setActiveShaderProgram:displayProgram];
         glEnableVertexAttribArray(displayPositionAttribute);
         glEnableVertexAttribArray(displayTextureCoordinateAttribute);
+
+        glUniform1i(displayInputTextureUniform, 4);
         
         [self setBackgroundColorRed:0.0 green:0.0 blue:0.0 alpha:1.0];
         _fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -154,6 +159,53 @@
 
 #pragma mark -
 #pragma mark Managing the display FBOs
+
+typedef struct {
+    GLfloat position[2];
+    GLfloat texcoord[2];
+} Vertex;
+
+const Vertex ViewVertices[] = {
+    { { -1, -1 }, { 0, 0}}, //bottom left
+    { {1, -1 }, {1, 0}},  //bottom right
+    { {-1, 1 }, {0, 1}}, //top left
+    { {1, 1 }, {1, 1}}   //top right
+};
+
+const GLubyte ViewIndices[] = {
+    0, 1, 2,
+    2, 1, 3
+};
+
+- (void)setupVBOs {
+    //create and bind a vao
+    glGenVertexArraysOES(1, &viewVertexArrayObject);
+    glBindVertexArrayOES(viewVertexArrayObject);
+
+    //create and bind a BO for vertex data
+    glGenBuffers(1, &viewVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, viewVertexBuffer);
+
+    // copy data into the buffer object
+    glBufferData(GL_ARRAY_BUFFER, sizeof(ViewVertices), ViewVertices, GL_STATIC_DRAW);
+
+    // set up vertex attributes
+    glEnableVertexAttribArray(displayPositionAttribute);
+    glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glEnableVertexAttribArray(displayTextureCoordinateAttribute);
+    glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texcoord));
+
+
+    // Create and bind a BO for index data
+    glGenBuffers(1, &viewIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, viewIndexBuffer);
+
+    // copy data into the buffer object
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ViewIndices), ViewIndices, GL_STATIC_DRAW);
+
+    //unbind it, rebind it only when you needed
+    glBindVertexArrayOES(0);
+}
 
 - (void)createDisplayFramebuffer;
 {
@@ -188,7 +240,7 @@
     __unused GLuint framebufferCreationStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", self.bounds.size.width, self.bounds.size.height);
     boundsSizeAtFrameBufferEpoch = self.bounds.size;
-
+    
     [self recalculateViewGeometry];
 }
 
@@ -207,6 +259,18 @@
 		glDeleteRenderbuffers(1, &displayRenderbuffer);
 		displayRenderbuffer = 0;
 	}
+    if (viewIndexBuffer) {
+        glDeleteBuffers(1, &viewIndexBuffer);
+        viewIndexBuffer = 0;
+    }
+    if (viewVertexBuffer) {
+        glDeleteBuffers(1, &viewVertexBuffer);
+        viewVertexBuffer = 0;
+    }
+    if (viewVertexArrayObject) {
+        glDeleteBuffers(1, &viewVertexArrayObject);
+        viewVertexArrayObject = 0;
+    }
 }
 
 - (void)setDisplayFramebuffer;
@@ -215,7 +279,11 @@
     {
         [self createDisplayFramebuffer];
     }
-    
+
+    if (self.useVbo && !viewVertexArrayObject) {
+        [self setupVBOs];
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, displayFramebuffer);
     
     glViewport(0, 0, (GLint)_sizeInPixels.width, (GLint)_sizeInPixels.height);
@@ -380,12 +448,21 @@
         
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, [inputFramebufferForDisplay texture]);
-        glUniform1i(displayInputTextureUniform, 4);
-        
-        glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
-        glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageView textureCoordinatesForRotation:inputRotation]);
-        
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+        if (self.useVbo) {
+            glBindVertexArrayOES(viewVertexArrayObject);
+
+            glDrawElements(GL_TRIANGLE_STRIP, sizeof(ViewIndices)/sizeof(GLubyte), GL_UNSIGNED_BYTE, 0);
+
+            glBindVertexArrayOES(0);
+        } else {
+            glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
+            glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageView textureCoordinatesForRotation:inputRotation]);
+
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        }
+
+
         
         [self presentFramebuffer];
         [inputFramebufferForDisplay unlock];

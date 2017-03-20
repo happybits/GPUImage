@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, GPUImageFillModeType) {
     GPUImageRotationMode inputRotation;
 }
 
+@property (nonatomic, assign) BOOL useVbo;
+
 /** The fill mode dictates how images are fit in the view, with the default being kGPUImageFillModePreserveAspectRatio
  */
 @property(readwrite, nonatomic) GPUImageFillModeType fillMode;
