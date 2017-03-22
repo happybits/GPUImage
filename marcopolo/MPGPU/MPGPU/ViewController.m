@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet GPUImageView *preview;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *usageLabel;
+@property (weak, nonatomic) IBOutlet UILabel *intensityLabel;
+@property (weak, nonatomic) IBOutlet UISlider *controlSlider;
 
 @property (nonatomic, strong) FilterConfiguration *config;
 @property (nonatomic, strong) NSTimer *runTimer;
@@ -39,6 +41,12 @@
     }];
 
     [self onReset:nil];
+    [self controlSliderValueChanged:self.controlSlider];
+}
+
+- (IBAction)controlSliderValueChanged:(UISlider *)sender {
+    NSLog(@"slider value = %f", sender.value);
+    self.intensityLabel.text = [NSString stringWithFormat:@"%.2f", sender.value];
 }
 
 - (IBAction)onReset:(id)sender {
