@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */; };
 		0145A8DD1E8317FE00B9FF5B /* sample_Clock.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */; };
 		0145A8DE1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */; };
 		0145A8E11E831BCE00B9FF5B /* GPUImageMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8E01E831BCE00B9FF5B /* GPUImageMovie.m */; };
@@ -61,8 +60,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0145A8D81E8317F400B9FF5B /* GPUImageBeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageBeautifyFilter.h; sourceTree = "<group>"; };
-		0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
 		0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_Clock.mp4; sourceTree = "<group>"; };
 		0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = skin_beautification_test_640.mp4; sourceTree = "<group>"; };
 		0145A8DF1E831BCE00B9FF5B /* GPUImageMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageMovie.h; sourceTree = "<group>"; };
@@ -159,8 +156,6 @@
 				0145A8E31E831C8800B9FF5B /* GPUImageColorConversion.m */,
 				0145A8DF1E831BCE00B9FF5B /* GPUImageMovie.h */,
 				0145A8E01E831BCE00B9FF5B /* GPUImageMovie.m */,
-				0145A8D81E8317F400B9FF5B /* GPUImageBeautifyFilter.h */,
-				0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */,
 				BCB5DDDD14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.h */,
 				BCB5DDDE14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.m */,
 				BCB5DDE514E868C0000AF3C2 /* SimpleVideoFileFilterViewController.h */,
@@ -304,7 +299,6 @@
 			files = (
 				0145A8E41E831C8800B9FF5B /* GPUImageColorConversion.m in Sources */,
 				BCB5DDDB14E86899000AF3C2 /* main.m in Sources */,
-				0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */,
 				0145A8E11E831BCE00B9FF5B /* GPUImageMovie.m in Sources */,
 				BCB5DDDF14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.m in Sources */,
 				BCB5DDE814E868C0000AF3C2 /* SimpleVideoFileFilterViewController.m in Sources */,

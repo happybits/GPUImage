@@ -1,5 +1,4 @@
 #import "SimpleVideoFileFilterViewController.h"
-#import "GPUImageBeautifyFilter.h"
 
 @implementation SimpleVideoFileFilterViewController
 {

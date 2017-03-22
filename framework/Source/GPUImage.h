@@ -171,5 +171,6 @@ FOUNDATION_EXPORT const unsigned char GPUImageFrameworkVersionString[];
 #import "GPUImageLaplacianFilter.h"
 #import "GPUImageiOSBlurFilter.h"
 #import "GPUImageLuminanceRangeFilter.h"
+#import "GPUImageBeautifyFilter.h"
 
 #endif
