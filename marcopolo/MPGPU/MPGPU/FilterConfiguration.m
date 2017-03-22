@@ -55,7 +55,7 @@
             [current addTarget:beautifyFilter];
             current = beautifyFilter;
             
-            self.intensity = 0.50;
+            self.intensity = 0.20;
 
 //            flts[0] = [[GPUImageBeautifyFilter alloc] init];
 //            //flts[0] = [[GPUImageBilateralFilter alloc] init];
