@@ -10,6 +10,8 @@
 		0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */; };
 		0145A8DD1E8317FE00B9FF5B /* sample_Clock.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */; };
 		0145A8DE1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */; };
+		0145A8E11E831BCE00B9FF5B /* GPUImageMovie.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8E01E831BCE00B9FF5B /* GPUImageMovie.m */; };
+		0145A8E41E831C8800B9FF5B /* GPUImageColorConversion.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8E31E831C8800B9FF5B /* GPUImageColorConversion.m */; };
 		466AE00B14F2A196004FE0E5 /* sample_iPod.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 466AE00A14F2A196004FE0E5 /* sample_iPod.m4v */; };
 		BC11C28315BCBE2300E5BEC7 /* WID-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BC11C28215BCBE2300E5BEC7 /* WID-small.jpg */; };
 		BCB3C43A16BCA871003D26B0 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = BCB3C43516BCA871003D26B0 /* Icon-72.png */; };
@@ -63,6 +65,10 @@
 		0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
 		0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_Clock.mp4; sourceTree = "<group>"; };
 		0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = skin_beautification_test_640.mp4; sourceTree = "<group>"; };
+		0145A8DF1E831BCE00B9FF5B /* GPUImageMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageMovie.h; sourceTree = "<group>"; };
+		0145A8E01E831BCE00B9FF5B /* GPUImageMovie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageMovie.m; sourceTree = "<group>"; };
+		0145A8E21E831C8800B9FF5B /* GPUImageColorConversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageColorConversion.h; sourceTree = "<group>"; };
+		0145A8E31E831C8800B9FF5B /* GPUImageColorConversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageColorConversion.m; sourceTree = "<group>"; };
 		466AE00A14F2A196004FE0E5 /* sample_iPod.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_iPod.m4v; sourceTree = "<group>"; };
 		BC11C28215BCBE2300E5BEC7 /* WID-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "WID-small.jpg"; sourceTree = "<group>"; };
 		BCB3C43516BCA871003D26B0 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../../SharedIcons/Icon-72.png"; sourceTree = "<group>"; };
@@ -149,6 +155,10 @@
 		BCB5DDD414E86899000AF3C2 /* SimpleVideoFileFilter */ = {
 			isa = PBXGroup;
 			children = (
+				0145A8E21E831C8800B9FF5B /* GPUImageColorConversion.h */,
+				0145A8E31E831C8800B9FF5B /* GPUImageColorConversion.m */,
+				0145A8DF1E831BCE00B9FF5B /* GPUImageMovie.h */,
+				0145A8E01E831BCE00B9FF5B /* GPUImageMovie.m */,
 				0145A8D81E8317F400B9FF5B /* GPUImageBeautifyFilter.h */,
 				0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */,
 				BCB5DDDD14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.h */,
@@ -219,6 +229,11 @@
 			attributes = {
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Cell Phone";
+				TargetAttributes = {
+					BCB5DDC914E86899000AF3C2 = {
+						DevelopmentTeam = L734DJCF4M;
+					};
+				};
 			};
 			buildConfigurationList = BCB5DDC414E86899000AF3C2 /* Build configuration list for PBXProject "SimpleVideoFileFilter" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -287,8 +302,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0145A8E41E831C8800B9FF5B /* GPUImageColorConversion.m in Sources */,
 				BCB5DDDB14E86899000AF3C2 /* main.m in Sources */,
 				0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */,
+				0145A8E11E831BCE00B9FF5B /* GPUImageMovie.m in Sources */,
 				BCB5DDDF14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.m in Sources */,
 				BCB5DDE814E868C0000AF3C2 /* SimpleVideoFileFilterViewController.m in Sources */,
 			);
@@ -397,10 +414,12 @@
 		BCB5DDE314E86899000AF3C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = L734DJCF4M;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleVideoFileFilter/SimpleVideoFileFilter-Prefix.pch";
 				INFOPLIST_FILE = "SimpleVideoFileFilter/SimpleVideoFileFilter-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -409,10 +428,12 @@
 		BCB5DDE414E86899000AF3C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEVELOPMENT_TEAM = L734DJCF4M;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleVideoFileFilter/SimpleVideoFileFilter-Prefix.pch";
 				INFOPLIST_FILE = "SimpleVideoFileFilter/SimpleVideoFileFilter-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

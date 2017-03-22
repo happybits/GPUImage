@@ -5,27 +5,27 @@
 // Color Conversion Constants (YUV to RGB) including adjustment from 16-235/16-240 (video range)
 
 // BT.601, which is the standard for SDTV.
-const GLfloat kColorConversion601[] = {
+const GLfloat kHBColorConversion601[] = {
     1.164f,  1.164f, 1.164f,
     0.0f, -0.392f, 2.017f,
     1.596f, -0.813f,   0.0f,
 };
 
 // BT.709, which is the standard for HDTV.
-const GLfloat kColorConversion709[] = {
+const GLfloat kHBColorConversion709[] = {
     1.164f,  1.164f, 1.164f,
     0.0f, -0.213f, 2.112f,
     1.793f, -0.533f,   0.0f,
 };
 
 // BT.601 full range (ref: http://www.equasys.de/colorconversion.html)
-const GLfloat kColorConversion601FullRange[] = {
+const GLfloat kHBColorConversion601FullRange[] = {
     1.0f,    1.0f,    1.0f,
     0.0f,    -0.343f, 1.765f,
     1.4f,    -0.711f, 0.0f,
 };
 
-NSString *const kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = SHADER_STRING(
+NSString *const kHBGPUImageYUVVideoRangeConversionForRGFragmentShaderString = SHADER_STRING(
   varying highp vec2 textureCoordinate;
   
   uniform sampler2D luminanceTexture;
@@ -45,7 +45,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = SHAD
   }
 );
 
-NSString *const kGPUImageYUVFullRangeConversionForLAFragmentShaderString = SHADER_STRING(
+NSString *const kHBGPUImageYUVFullRangeConversionForLAFragmentShaderString = SHADER_STRING(
  varying highp vec2 textureCoordinate;
  
  uniform sampler2D luminanceTexture;
@@ -65,7 +65,7 @@ NSString *const kGPUImageYUVFullRangeConversionForLAFragmentShaderString = SHADE
  }
 );
 
-NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRING(
+NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHADER_STRING(
   varying highp vec2 textureCoordinate;
   
   uniform sampler2D luminanceTexture;
@@ -121,7 +121,7 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     
     _outputRotation = kGPUImageNoRotation;
     _internalRotation = kGPUImageNoRotation;
-    _preferredConversion = kColorConversion709;
+    _preferredConversion = kHBColorConversion709;
     
 	return self;
 }
@@ -151,9 +151,9 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
         
         _isFullYUVRange = supportsFullYUVRange;
         if (_isFullYUVRange) {
-            self.preferredConversion = kColorConversion601FullRange;
+            self.preferredConversion = kHBColorConversion601FullRange;
         } else {
-            self.preferredConversion = kColorConversion601;
+            self.preferredConversion = kHBColorConversion601;
         }
         
     } else {
@@ -163,9 +163,9 @@ NSString *const kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SHAD
     runSynchronouslyOnVideoProcessingQueue(^{
         [GPUImageContext useImageProcessingContext];
         if (self.isFullYUVRange) {
-            self.yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImageYUVFullRangeConversionForLAFragmentShaderString];
+            self.yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kHBGPUImageYUVFullRangeConversionForLAFragmentShaderString];
         } else {
-            self.yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kGPUImageYUVVideoRangeConversionForLAFragmentShaderString];
+            self.yuvConversionProgram = [[GPUImageContext sharedImageProcessingContext] programForVertexShaderString:kGPUImageVertexShaderString fragmentShaderString:kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString];
         }
         
         if (!self.yuvConversionProgram.initialized) {

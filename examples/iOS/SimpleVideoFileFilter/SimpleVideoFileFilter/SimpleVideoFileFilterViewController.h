@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "GPUImage.h"
+#import "GPUImageMovie.h"
 
 @interface SimpleVideoFileFilterViewController : UIViewController
 {
