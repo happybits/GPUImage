@@ -40,7 +40,7 @@
     _cameraAdapter.cameraPosition = AVCaptureDevicePositionFront;
 
     // N.B. Using VBO and reusing frame buffers are a performance win.
-    _cameraAdapter.useVbo = YES;
+    _cameraAdapter.useVbo = NO;
     _cameraAdapter.reuseFramebuffer = YES;
 
     for (AVCaptureDevice *device in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {

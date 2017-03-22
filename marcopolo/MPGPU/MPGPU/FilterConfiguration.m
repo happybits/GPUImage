@@ -52,7 +52,7 @@
 
         if (self.includePreview) {
             [current addTarget:self.preview];
-            self.preview.useVbo = YES;
+            self.preview.useVbo = NO;
         }
 
     } else {
