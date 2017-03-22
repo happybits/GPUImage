@@ -22,6 +22,8 @@
 @property (nonatomic, assign) BOOL includeBeautify;
 @property (nonatomic, assign) BOOL includePreview;
 
+@property (nonatomic, assign) float intensity;
+
 - (void)startCamera;
 - (void)resetStats;
 

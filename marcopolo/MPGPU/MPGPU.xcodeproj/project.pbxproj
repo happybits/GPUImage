@@ -165,7 +165,7 @@
 				TargetAttributes = {
 					80C99B151E7D90CC0085FA6A = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6L379HCV5Q;
+						DevelopmentTeam = L734DJCF4M;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -356,9 +356,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 6L379HCV5Q;
+				DEVELOPMENT_TEAM = L734DJCF4M;
 				HEADER_SEARCH_PATHS = "../../framework/**";
 				INFOPLIST_FILE = MPGPU/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.happybits.MPGPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -369,9 +370,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 6L379HCV5Q;
+				DEVELOPMENT_TEAM = L734DJCF4M;
 				HEADER_SEARCH_PATHS = "../../framework/**";
 				INFOPLIST_FILE = MPGPU/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.happybits.MPGPU;
 				PRODUCT_NAME = "$(TARGET_NAME)";

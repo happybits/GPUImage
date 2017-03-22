@@ -20,6 +20,10 @@
 @end
 
 @implementation FilterConfiguration
+{
+#define FLTS_CNT 1
+    GPUImageOutput<GPUImageInput> * flts[FLTS_CNT];
+}
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -45,9 +49,30 @@
         }
 
         if (self.includeBeautify) {
-            BeautifyFilter *beautifyFilter = [BeautifyFilter new];
+            //BeautifyFilter *beautifyFilter = [BeautifyFilter new];
+            GPUImageBeautifyFilter *beautifyFilter = [GPUImageBeautifyFilter new];
+            flts[0] = beautifyFilter;
             [current addTarget:beautifyFilter];
             current = beautifyFilter;
+            
+            self.intensity = 0.50;
+
+//            flts[0] = [[GPUImageBeautifyFilter alloc] init];
+//            //flts[0] = [[GPUImageBilateralFilter alloc] init];
+//            for(int i=0; i<FLTS_CNT; i++) {
+//                [(GPUImageBeautifyFilter *)flts[i] setDistanceNormalizationFactor:4.0];
+//                [(GPUImageBeautifyFilter *)flts[i] setIntensity:intensity];
+//            }
+//            [movieFile addTarget:flts[0]];
+//            for(int i=1;i<FLTS_CNT;i++) {
+//                flts[i] = [[GPUImageBeautifyFilter alloc] init];
+//                [flts[i-1] addTarget:flts[i]];
+//            }
+//            // Only rotate the video for display, leave orientation the same for recording
+//            GPUImageView *filterView = (GPUImageView *)self.view;
+//            //[filter addTarget:filterView];
+//            [flts[FLTS_CNT-1] addTarget:filterView];
+            
         }
 
         if (self.includePreview) {
@@ -77,6 +102,10 @@
 
 - (FrameCounters)counters {
     return [self.camera getFrameCounters];
+}
+
+- (void)setIntensity:(float)intensity {
+    [(GPUImageBeautifyFilter *)flts[0] setIntensity:intensity];
 }
 
 @end

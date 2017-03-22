@@ -31,7 +31,7 @@
 
     _config.includeCameraRender = YES;
     _config.includePreview = YES;
-    _config.includeBeautify = NO;
+    _config.includeBeautify = YES;
     [_config startCamera];
 
     _titleLabel.text = _config.configName;
@@ -49,6 +49,7 @@
 - (IBAction)controlSliderValueChanged:(UISlider *)sender {
     NSLog(@"slider value = %f", sender.value);
     self.intensityLabel.text = [NSString stringWithFormat:@"%.2f", sender.value];
+    self.config.intensity = sender.value;
 }
 
 - (IBAction)onReset:(id)sender {
