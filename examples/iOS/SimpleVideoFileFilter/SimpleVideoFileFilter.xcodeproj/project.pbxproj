@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */; };
+		0145A8DD1E8317FE00B9FF5B /* sample_Clock.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */; };
+		0145A8DE1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */; };
 		466AE00B14F2A196004FE0E5 /* sample_iPod.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 466AE00A14F2A196004FE0E5 /* sample_iPod.m4v */; };
 		BC11C28315BCBE2300E5BEC7 /* WID-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BC11C28215BCBE2300E5BEC7 /* WID-small.jpg */; };
 		BCB3C43A16BCA871003D26B0 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = BCB3C43516BCA871003D26B0 /* Icon-72.png */; };
@@ -56,6 +59,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0145A8D81E8317F400B9FF5B /* GPUImageBeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageBeautifyFilter.h; sourceTree = "<group>"; };
+		0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
+		0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_Clock.mp4; sourceTree = "<group>"; };
+		0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = skin_beautification_test_640.mp4; sourceTree = "<group>"; };
 		466AE00A14F2A196004FE0E5 /* sample_iPod.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_iPod.m4v; sourceTree = "<group>"; };
 		BC11C28215BCBE2300E5BEC7 /* WID-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "WID-small.jpg"; sourceTree = "<group>"; };
 		BCB3C43516BCA871003D26B0 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../../SharedIcons/Icon-72.png"; sourceTree = "<group>"; };
@@ -142,6 +149,8 @@
 		BCB5DDD414E86899000AF3C2 /* SimpleVideoFileFilter */ = {
 			isa = PBXGroup;
 			children = (
+				0145A8D81E8317F400B9FF5B /* GPUImageBeautifyFilter.h */,
+				0145A8D91E8317F400B9FF5B /* GPUImageBeautifyFilter.m */,
 				BCB5DDDD14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.h */,
 				BCB5DDDE14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.m */,
 				BCB5DDE514E868C0000AF3C2 /* SimpleVideoFileFilterViewController.h */,
@@ -155,6 +164,8 @@
 		BCB5DDD514E86899000AF3C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0145A8DB1E8317FE00B9FF5B /* sample_Clock.mp4 */,
+				0145A8DC1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 */,
 				BCB3C43516BCA871003D26B0 /* Icon-72.png */,
 				BCB3C43616BCA871003D26B0 /* Icon-72@2x.png */,
 				BCB3C43716BCA871003D26B0 /* Icon.png */,
@@ -258,8 +269,10 @@
 				BCB5DDE914E868C0000AF3C2 /* SimpleVideoFileFilterViewController.xib in Resources */,
 				466AE00B14F2A196004FE0E5 /* sample_iPod.m4v in Resources */,
 				E5066F5C1855AC55008C7682 /* Default-568h@2x.png in Resources */,
+				0145A8DE1E8317FE00B9FF5B /* skin_beautification_test_640.mp4 in Resources */,
 				BC11C28315BCBE2300E5BEC7 /* WID-small.jpg in Resources */,
 				BCB3C43A16BCA871003D26B0 /* Icon-72.png in Resources */,
+				0145A8DD1E8317FE00B9FF5B /* sample_Clock.mp4 in Resources */,
 				BCB3C43B16BCA871003D26B0 /* Icon-72@2x.png in Resources */,
 				BCB3C43C16BCA871003D26B0 /* Icon.png in Resources */,
 				BCB3C43D16BCA871003D26B0 /* Icon@2x.png in Resources */,
@@ -275,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCB5DDDB14E86899000AF3C2 /* main.m in Sources */,
+				0145A8DA1E8317F400B9FF5B /* GPUImageBeautifyFilter.m in Sources */,
 				BCB5DDDF14E86899000AF3C2 /* SimpleVideoFileFilterAppDelegate.m in Sources */,
 				BCB5DDE814E868C0000AF3C2 /* SimpleVideoFileFilterViewController.m in Sources */,
 			);

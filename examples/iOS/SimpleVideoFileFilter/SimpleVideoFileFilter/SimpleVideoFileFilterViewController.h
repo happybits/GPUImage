@@ -10,6 +10,7 @@
 }
 
 @property (retain, nonatomic) IBOutlet UILabel *progressLabel;
+@property (retain, nonatomic) IBOutlet UILabel *intensityLabel;
 - (IBAction)updatePixelWidth:(id)sender;
 
 @end
