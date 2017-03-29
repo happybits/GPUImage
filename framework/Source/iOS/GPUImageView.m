@@ -139,15 +139,17 @@
     [super layoutSubviews];
     
     // The frame buffer needs to be trashed and re-created when the view size changes.
-    if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
-        !CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
-        runSynchronouslyOnVideoProcessingQueue(^{
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
+            !CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+
             [self destroyDisplayFramebuffer];
             [self createDisplayFramebuffer];
-        });
-    } else if (!CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
-        [self recalculateViewGeometry];
-    }
+            
+        } else if (!CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+            [self recalculateViewGeometry];
+        }
+    });
 }
 
 - (void)dealloc
@@ -439,35 +441,35 @@ const GLubyte ViewIndices[] = {
 
 - (void)newFrameReadyAtTime:(CMTime)frameTime atIndex:(NSInteger)textureIndex;
 {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext setActiveShaderProgram:displayProgram];
-        [self setDisplayFramebuffer];
-        
-        glClearColor(backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, [inputFramebufferForDisplay texture]);
+    NSAssert(dispatch_get_specific([GPUImageContext contextKey]), @"Must be run on context queue");
 
-        if (self.useVbo) {
-            glBindVertexArrayOES(viewVertexArrayObject);
+    [GPUImageContext setActiveShaderProgram:displayProgram];
+    [self setDisplayFramebuffer];
+    
+    glClearColor(backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, [inputFramebufferForDisplay texture]);
 
-            glDrawElements(GL_TRIANGLE_STRIP, sizeof(ViewIndices)/sizeof(GLubyte), GL_UNSIGNED_BYTE, 0);
+    if (self.useVbo) {
+        glBindVertexArrayOES(viewVertexArrayObject);
 
-            glBindVertexArrayOES(0);
-        } else {
-            glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
-            glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageView textureCoordinatesForRotation:inputRotation]);
+        glDrawElements(GL_TRIANGLE_STRIP, sizeof(ViewIndices)/sizeof(GLubyte), GL_UNSIGNED_BYTE, 0);
 
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        }
+        glBindVertexArrayOES(0);
+    } else {
+        glVertexAttribPointer(displayPositionAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
+        glVertexAttribPointer(displayTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [GPUImageView textureCoordinatesForRotation:inputRotation]);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
 
 
-        
-        [self presentFramebuffer];
-        [inputFramebufferForDisplay unlock];
-        inputFramebufferForDisplay = nil;
-    });
+    
+    [self presentFramebuffer];
+    [inputFramebufferForDisplay unlock];
+    inputFramebufferForDisplay = nil;
 }
 
 - (NSInteger)nextAvailableTextureIndex;
@@ -488,21 +490,21 @@ const GLubyte ViewIndices[] = {
 
 - (void)setInputSize:(CGSize)newSize atIndex:(NSInteger)textureIndex;
 {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        CGSize rotatedSize = newSize;
-        
-        if (GPUImageRotationSwapsWidthAndHeight(inputRotation))
-        {
-            rotatedSize.width = newSize.height;
-            rotatedSize.height = newSize.width;
-        }
-        
-        if (!CGSizeEqualToSize(inputImageSize, rotatedSize))
-        {
-            inputImageSize = rotatedSize;
-            [self recalculateViewGeometry];
-        }
-    });
+    NSAssert(dispatch_get_specific([GPUImageContext contextKey]), @"Must be run on context queue");
+
+    CGSize rotatedSize = newSize;
+    
+    if (GPUImageRotationSwapsWidthAndHeight(inputRotation))
+    {
+        rotatedSize.width = newSize.height;
+        rotatedSize.height = newSize.width;
+    }
+    
+    if (!CGSizeEqualToSize(inputImageSize, rotatedSize))
+    {
+        inputImageSize = rotatedSize;
+        [self recalculateViewGeometry];
+    }
 }
 
 - (CGSize)maximumOutputSize;
