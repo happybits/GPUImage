@@ -126,8 +126,6 @@
         [GPUImageContext setActiveShaderProgram:displayProgram];
         glEnableVertexAttribArray(displayPositionAttribute);
         glEnableVertexAttribArray(displayTextureCoordinateAttribute);
-
-        glUniform1i(displayInputTextureUniform, 4);
         
         [self setBackgroundColorRed:0.0 green:0.0 blue:0.0 alpha:1.0];
         _fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -452,6 +450,8 @@ const GLubyte ViewIndices[] = {
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, [inputFramebufferForDisplay texture]);
 
+    glUniform1i(displayInputTextureUniform, 4);
+    
     if (self.useVbo) {
         glBindVertexArrayOES(viewVertexArrayObject);
 
