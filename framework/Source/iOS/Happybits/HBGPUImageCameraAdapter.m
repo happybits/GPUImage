@@ -31,6 +31,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForRGFragmentShaderString = SH
   uniform sampler2D luminanceTexture;
   uniform sampler2D chrominanceTexture;
   uniform mediump mat3 colorConversionMatrix;
+  uniform highp float exposure;
   
   void main()
   {
@@ -41,7 +42,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForRGFragmentShaderString = SH
       yuv.yz = texture2D(chrominanceTexture, textureCoordinate).rg - vec2(0.5, 0.5);
       rgb = colorConversionMatrix * yuv;
       
-      gl_FragColor = vec4(rgb, 1);
+      gl_FragColor = vec4(rgb * pow(2.0, exposure), 1);
   }
 );
 
@@ -51,6 +52,7 @@ NSString *const kHBGPUImageYUVFullRangeConversionForLAFragmentShaderString = SHA
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
  uniform mediump mat3 colorConversionMatrix;
+ uniform highp float exposure;
  
  void main()
  {
@@ -61,7 +63,7 @@ NSString *const kHBGPUImageYUVFullRangeConversionForLAFragmentShaderString = SHA
      yuv.yz = texture2D(chrominanceTexture, textureCoordinate).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
      
-     gl_FragColor = vec4(rgb, 1);
+     gl_FragColor = vec4(rgb * pow(2.0, exposure), 1);
  }
 );
 
@@ -71,6 +73,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
   uniform sampler2D luminanceTexture;
   uniform sampler2D chrominanceTexture;
   uniform mediump mat3 colorConversionMatrix;
+  uniform highp float exposure;
   
   void main()
   {
@@ -81,7 +84,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
       yuv.yz = texture2D(chrominanceTexture, textureCoordinate).ra - vec2(0.5, 0.5);
       rgb = colorConversionMatrix * yuv;
       
-      gl_FragColor = vec4(rgb, 1);
+      gl_FragColor = vec4(rgb * pow(2.0, exposure), 1);
   }
 );
 
@@ -97,6 +100,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
 @property (nonatomic, assign) GLint yuvConversionLuminanceTextureUniform;
 @property (nonatomic, assign) GLint yuvConversionChrominanceTextureUniform;
 @property (nonatomic, assign) GLint yuvConversionMatrixUniform;
+@property (nonatomic, assign) GLint exposureUniform;
 @property (nonatomic, assign) const GLfloat *preferredConversion;
 @property (nonatomic, assign) BOOL isFullYUVRange;
 @property (nonatomic, assign) int imageBufferWidth;
@@ -106,6 +110,7 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
 @property (nonatomic, assign) GLuint luminanceTexture;
 @property (nonatomic, assign) GLuint chrominanceTexture;
 @property (nonatomic, assign) BOOL thumbNeeded;
+@property (nonatomic, assign) CGFloat exposure;
 
 @property (nonatomic, assign) CVOpenGLESTextureRef luminanceTextureRef;
 @property (nonatomic, assign) CVOpenGLESTextureRef chrominanceTextureRef;
@@ -189,7 +194,8 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
         self.yuvConversionLuminanceTextureUniform = [self.yuvConversionProgram uniformIndex:@"luminanceTexture"];
         self.yuvConversionChrominanceTextureUniform = [self.yuvConversionProgram uniformIndex:@"chrominanceTexture"];
         self.yuvConversionMatrixUniform = [self.yuvConversionProgram uniformIndex:@"colorConversionMatrix"];
-        
+        self.exposureUniform = [self.yuvConversionProgram uniformIndex:@"exposure"];
+
         [GPUImageContext setActiveShaderProgram:self.yuvConversionProgram];
 
         if (self.useVbo) {
@@ -199,9 +205,19 @@ NSString *const kHBGPUImageYUVVideoRangeConversionForLAFragmentShaderString = SH
         glUniform1i(self.yuvConversionLuminanceTextureUniform, 4);
         glUniform1i(self.yuvConversionChrominanceTextureUniform, 5);
         glUniformMatrix3fv(self.yuvConversionMatrixUniform, 1, GL_FALSE, self.preferredConversion);
+        glUniform1f(self.exposureUniform, 0);
         
         glEnableVertexAttribArray(self.yuvConversionPositionAttribute);
         glEnableVertexAttribArray(self.yuvConversionTextureCoordinateAttribute);
+    });
+}
+
+- (void)updateExposure:(CGFloat)exposure {
+    self.exposure = exposure;
+
+    runAsynchronouslyOnVideoProcessingQueue(^{
+        [GPUImageContext setActiveShaderProgram:self.yuvConversionProgram];
+        glUniform1f(self.exposureUniform, exposure);
     });
 }
 

@@ -3,11 +3,12 @@
 #import <CoreMedia/CoreMedia.h>
 #import "GPUImageContext.h"
 #import "GPUImageOutput.h"
+#import "GPUImageExposureFilter.h"
 
 /**
  A GPUImageOutput that provides frames from either camera
  */
-@interface HBGPUImageCameraAdapter : GPUImageOutput
+@interface HBGPUImageCameraAdapter : GPUImageOutput <GPUImageExposureAdjuster>
 
 @property (nonatomic, assign) AVCaptureDevicePosition cameraPosition;
 @property (nonatomic, assign) UIInterfaceOrientation outputImageOrientation;

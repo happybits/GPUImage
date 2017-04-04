@@ -62,5 +62,9 @@ NSString *const kGPUImageExposureFragmentShaderString = SHADER_STRING
     [self setFloat:_exposure forUniform:exposureUniform program:filterProgram];
 }
 
+- (void)updateExposure:(CGFloat)exposure {
+    self.exposure = exposure;
+}
+
 @end
 

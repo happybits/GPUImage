@@ -1,6 +1,12 @@
 #import "GPUImageFilter.h"
 
-@interface GPUImageExposureFilter : GPUImageFilter
+@protocol GPUImageExposureAdjuster
+
+- (void)updateExposure:(CGFloat)exposure;
+
+@end
+
+@interface GPUImageExposureFilter : GPUImageFilter <GPUImageExposureAdjuster>
 {
     GLint exposureUniform;
 }
