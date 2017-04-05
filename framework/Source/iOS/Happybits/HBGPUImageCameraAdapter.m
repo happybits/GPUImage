@@ -579,15 +579,9 @@ const GLushort Indices[] = {
 }
 
 - (void)setDropAllFrames:(BOOL)dropAllFrames {
-    @synchronized (self) {
-        _dropAllFrames = dropAllFrames;
-    }
-}
+    _dropAllFrames = dropAllFrames;
 
-- (void)runBlockSynchronously:(void (^)())block {
-    @synchronized(self) {
-        block();
-    }
+    runSynchronouslyOnVideoProcessingQueue(^{});
 }
 
 @end

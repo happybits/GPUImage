@@ -25,5 +25,5 @@
 - (id)init;
 - (void)setupConversion:(AVCaptureVideoDataOutput *)videoOutput;
 - (void)processSampleBuffer:(CMSampleBufferRef)sampleBuffer andCaptureFilteredImage:(GPUImageOutput *)filter withBlock:(void (^)(UIImage *))block;
-- (void)runBlockSynchronously:(void (^)())block;
+
 @end
