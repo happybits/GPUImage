@@ -39,7 +39,7 @@
     __unsafe_unretained __typeof__ (self) weakSelf = self;
     memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         __typeof__ (self) strongSelf = weakSelf;
-        if (strongSelf) {
+        if (strongSelf && [[UIApplication sharedApplication] applicationState] != UIApplicationStateBackground) {
             [strongSelf purgeAllUnassignedFramebuffers];
         }
     }];
