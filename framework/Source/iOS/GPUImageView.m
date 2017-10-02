@@ -10,6 +10,7 @@
 
 @interface GPUImageView () 
 {
+    CAEAGLLayer *eaglLayer;
     GPUImageFramebuffer *inputFramebufferForDisplay;
     GLuint displayRenderbuffer, displayFramebuffer;
     
@@ -21,6 +22,7 @@
     GLfloat imageVertices[8];
     GLfloat backgroundColorRed, backgroundColorGreen, backgroundColorBlue, backgroundColorAlpha;
 
+    CGRect boundsAtLayout;
     CGSize boundsSizeAtFrameBufferEpoch;
     GLuint viewVertexBuffer;
     GLuint viewIndexBuffer;
@@ -91,7 +93,7 @@
     inputRotation = kGPUImageNoRotation;
     self.opaque = YES;
     self.hidden = NO;
-    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+    eaglLayer = (CAEAGLLayer *)self.layer;
     eaglLayer.opaque = YES;
     eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 
@@ -135,16 +137,18 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
+    boundsAtLayout = self.bounds;
+
     // The frame buffer needs to be trashed and re-created when the view size changes.
     runAsynchronouslyOnVideoProcessingQueue(^{
-        if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
-            !CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+        if (!CGSizeEqualToSize(boundsAtLayout.size, boundsSizeAtFrameBufferEpoch) &&
+            !CGSizeEqualToSize(boundsAtLayout.size, CGSizeZero)) {
 
             [self destroyDisplayFramebuffer];
             [self createDisplayFramebuffer];
             
-        } else if (!CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+        } else if (!CGSizeEqualToSize(boundsAtLayout.size, CGSizeZero)) {
             [self recalculateViewGeometry];
         }
     });
@@ -217,7 +221,7 @@ const GLubyte ViewIndices[] = {
     glGenRenderbuffers(1, &displayRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, displayRenderbuffer);
 	
-    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
+    [[[GPUImageContext sharedImageProcessingContext] context] renderbufferStorage:GL_RENDERBUFFER fromDrawable:eaglLayer];
 	
     GLint backingWidth, backingHeight;
 
@@ -238,8 +242,8 @@ const GLubyte ViewIndices[] = {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, displayRenderbuffer);
 	
     __unused GLuint framebufferCreationStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", self.bounds.size.width, self.bounds.size.height);
-    boundsSizeAtFrameBufferEpoch = self.bounds.size;
+    NSAssert(framebufferCreationStatus == GL_FRAMEBUFFER_COMPLETE, @"Failure with display framebuffer generation for display of size: %f, %f", boundsAtLayout.size.width, boundsAtLayout.size.height);
+    boundsSizeAtFrameBufferEpoch = boundsAtLayout.size;
     
     [self recalculateViewGeometry];
 }
@@ -300,15 +304,16 @@ const GLubyte ViewIndices[] = {
 
 - (void)recalculateViewGeometry;
 {
+
     runSynchronouslyOnVideoProcessingQueue(^{
         CGFloat heightScaling, widthScaling;
         
-        CGSize currentViewSize = self.bounds.size;
+        CGSize currentViewSize = boundsAtLayout.size;
         
         //    CGFloat imageAspectRatio = inputImageSize.width / inputImageSize.height;
         //    CGFloat viewAspectRatio = currentViewSize.width / currentViewSize.height;
         
-        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, self.bounds);
+        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, boundsAtLayout);
         
         switch(_fillMode)
         {
@@ -511,12 +516,12 @@ const GLubyte ViewIndices[] = {
 {
     if ([self respondsToSelector:@selector(setContentScaleFactor:)])
     {
-        CGSize pointSize = self.bounds.size;
+        CGSize pointSize = boundsAtLayout.size;
         return CGSizeMake(self.contentScaleFactor * pointSize.width, self.contentScaleFactor * pointSize.height);
     }
     else
     {
-        return self.bounds.size;
+        return boundsAtLayout.size;
     }
 }
 
