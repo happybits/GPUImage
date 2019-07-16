@@ -45,10 +45,9 @@ static void *openGLESContextQueueKey;
 }
 
 - (void)dealloc {
-    if (_coreVideoTextureCache) {
-        CVOpenGLESTextureCacheFlush(_coreVideoTextureCache, 0);
+    if (_coreVideoTextureCache != 0) {
         CFRelease(_coreVideoTextureCache);
-        _coreVideoTextureCache = NULL;
+        _coreVideoTextureCache = 0;
     }
 }
 
